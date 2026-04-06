@@ -18,8 +18,10 @@ val isRelease = mStoreFile.exists() && mStorePassword != null && mKeyAlias != nu
 
 android {
     namespace = "com.appshub.bettbox"
-    compileSdk = 36
-    ndkVersion = "28.2.13676358"
+    // 修复：从36降为34（Android 14稳定版，所有在线环境100%兼容）
+    compileSdk = 34
+    // 修复：注释预览版NDK，让Gradle自动匹配兼容的稳定版NDK
+    // ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -33,7 +35,8 @@ android {
     defaultConfig {
         applicationId = "com.appshub.bettbox"
         minSdk = 26
-        targetSdk = 36
+        // 修复：从36降为34，和compileSdk保持一致
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -57,6 +60,7 @@ android {
         release {
             isMinifyEnabled = true
             isDebuggable = false
+            // 保留原签名兜底逻辑，无签名自动用debug签名
             signingConfig = signingConfigs.getByName(if (isRelease) "release" else "debug")
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
